@@ -6,4 +6,4 @@ Base codes are adapted from [official PyTorch tutorial](http://pytorch.org/docs/
 
 It implements simple MLP with one hidden layer, without non-linear activation function.
 
-Run train_fa_vs_bp_linear_model.py to compare performance between feedback alignment vs backpropgation.
+Run train_fa_vs_bp_linear_model.py to compare performance between feedback alignment vs backpropagation.
