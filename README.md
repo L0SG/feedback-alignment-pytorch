@@ -1,6 +1,6 @@
 # Feedback Alignment in PyTorch
 
-This is a simple implementation of [Direct Feedback Alignment Provides Learning in Deep Neural Networks](https://www.nature.com/articles/ncomms13276) in PyTorch.
+This is a simple implementation of [Random synaptic feedback weights support error backpropagation for deep learning](https://www.nature.com/articles/ncomms13276) in PyTorch.
 
 Base codes are adapted from [official PyTorch tutorial](http://pytorch.org/docs/master/notes/extending.html).
 
