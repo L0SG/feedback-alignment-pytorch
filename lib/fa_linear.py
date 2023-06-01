@@ -25,7 +25,7 @@ class LinearFANetwork(nn.Module):
         # first hidden layer
         self.linear = [LinearFAModule(self.in_features, self.num_hidden_list[0])]
         # append additional hidden layers to list
-        for idx in xrange(self.num_layers - 1):
+        for idx in range(self.num_layers - 1):
             self.linear.append(LinearFAModule(self.num_hidden_list[idx], self.num_hidden_list[idx+1]))
 
         # create ModuleList to make list of layers work
@@ -66,7 +66,7 @@ class LinearFAFunction(autograd.Function):
         if context.needs_input_grad[0]:
             # all of the logic of FA resides in this one line
             # calculate the gradient of input with fixed fa tensor, rather than the "correct" model weight
-            grad_input = grad_output.mm(weight_fa)
+            grad_input = grad_output.mm(weight_fa.to(grad_output.device))
         if context.needs_input_grad[1]:
             # grad for weight with FA'ed grad_output from downstream layer
             # it is same with original linear function

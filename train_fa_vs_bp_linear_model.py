@@ -8,6 +8,10 @@ from lib import fa_linear
 from lib import linear
 import os
 
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 BATCH_SIZE = 32
 
 # load mnist dataset
@@ -25,10 +29,10 @@ test_loader = DataLoader(datasets.MNIST('./data', train=False, download=True,
                          batch_size=BATCH_SIZE, shuffle=True)
 
 # load feedforward dfa model
-model_fa = fa_linear.LinearFANetwork(in_features=784, num_layers=2, num_hidden_list=[1000, 10])
+model_fa = fa_linear.LinearFANetwork(in_features=784, num_layers=2, num_hidden_list=[1000, 10]).to(device)
 
 # load reference linear model
-model_bp = linear.LinearNetwork(in_features=784, num_layers=2, num_hidden_list=[1000, 10])
+model_bp = linear.LinearNetwork(in_features=784, num_layers=2, num_hidden_list=[1000, 10]).to(device)
 
 # optimizers
 optimizer_fa = torch.optim.SGD(model_fa.parameters(),
@@ -44,18 +48,18 @@ logger_train = open(results_path + 'train_log.txt', 'w')
 
 # train loop
 epochs = 1000
-for epoch in xrange(epochs):
+for epoch in range(epochs):
     for idx_batch, (inputs, targets) in enumerate(train_loader):
         # flatten the inputs from square image to 1d vector
         inputs = inputs.view(BATCH_SIZE, -1)
         # wrap them into varaibles
         inputs, targets = Variable(inputs), Variable(targets)
         # get outputs from the model
-        outputs_fa = model_fa(inputs)
-        outputs_bp = model_bp(inputs)
+        outputs_fa = model_fa(inputs.to(device))
+        outputs_bp = model_bp(inputs.to(device))
         # calculate loss
-        loss_fa = loss_crossentropy(outputs_fa, targets)
-        loss_bp = loss_crossentropy(outputs_bp, targets)
+        loss_fa = loss_crossentropy(outputs_fa, targets.to(device))
+        loss_bp = loss_crossentropy(outputs_bp, targets.to(device))
 
         model_fa.zero_grad()
         loss_fa.backward()
@@ -67,6 +71,6 @@ for epoch in xrange(epochs):
 
         if (idx_batch + 1) % 10 == 0:
             train_log = 'epoch ' + str(epoch) + ' step ' + str(idx_batch + 1) + \
-                        ' loss_fa ' + str(loss_fa.data[0]) + ' loss_bp ' + str(loss_bp.data[0])
+                        ' loss_fa ' + str(loss_fa.item()) + ' loss_bp ' + str(loss_bp.item())
             print(train_log)
             logger_train.write(train_log + '\n')
