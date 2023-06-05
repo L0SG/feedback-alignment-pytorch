@@ -8,7 +8,7 @@ def create_random_dataset(n_in, n_out, len_samples):
     M = np.random.randint(low=-10, high=10, size=(n_out, n_in))
     samples = []
     targets = []
-    for i in xrange(len_samples):
+    for i in range(len_samples):
         sample = np.random.randn(n_in)
         samples.append(sample)
         targets.append(np.dot(M, sample))
